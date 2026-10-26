@@ -11,17 +11,12 @@ import { BiDirectionalTranslator } from '../components/BiDirectionalTranslator';
 import { DeveloperAdSlot } from '../components/DeveloperAdSlot';
 import {
   Clock,
-  Code2,
   Copy,
   Check,
   RotateCcw,
   Sparkles,
-  Server,
-  Layers,
   HelpCircle,
-  Terminal,
-  ShieldCheck,
-  Zap,
+  Code
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -29,6 +24,7 @@ export default function HomePage() {
   const [expression, setExpression] = useState<string>('*/15 * * * *');
   const [activeFieldIdx, setActiveFieldIdx] = useState<number | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
+  const [showCheatsheet, setShowCheatsheet] = useState<boolean>(false);
 
   // Memoized analysis
   const analysis = useMemo(() => {
@@ -37,7 +33,6 @@ export default function HomePage() {
 
   const handleDialectChange = (newDialect: CronDialect) => {
     setDialect(newDialect);
-    // Set a sensible default expression for that dialect
     if (newDialect === 'quartz') setExpression('0 */15 * * * ?');
     else if (newDialect === 'aws') setExpression('0/15 * ? * * *');
     else if (newDialect === 'jenkins') setExpression('H/15 * * * *');
@@ -55,237 +50,229 @@ export default function HomePage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-slate-950 bg-grid-pattern text-slate-100 flex flex-col justify-between">
-      {/* Background ambient glow */}
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-gradient-to-b from-indigo-500/15 via-blue-500/5 to-transparent blur-3xl" />
-      </div>
-
-      <div className="relative z-10">
-        {/* Navigation / Header */}
-        <header className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur sticky top-0 z-30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 text-white shadow-lg shadow-indigo-500/20">
-                <Clock className="h-5 w-5" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold tracking-tight text-white flex items-center gap-2">
-                  CronDialect <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono">v2.4 Prod</span>
-                </h1>
-                <p className="text-xs text-slate-400">Multi-engine scheduler parser built by senior backend engineers</p>
-              </div>
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+      {/* Top Navigation */}
+      <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur sticky top-0 z-30">
+        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center space-x-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm">
+              <Clock className="h-5 w-5" />
             </div>
-
-            <div className="flex items-center space-x-2 text-xs font-mono text-slate-400">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="hidden sm:inline">Engine: Zero Cold-Start Edge Ready</span>
+            <div>
+              <span className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
+                CronView
+                <span className="text-[10px] uppercase font-mono font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 px-1.5 py-0.2 rounded">
+                  Free
+                </span>
+              </span>
             </div>
           </div>
-        </header>
 
-        {/* Developer Ad Slot (Single Unit, high-relevance, non-intrusive) */}
-        <DeveloperAdSlot network="ethicalads" />
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setShowCheatsheet(!showCheatsheet)}
+              className="text-xs text-slate-400 hover:text-slate-200 transition hidden sm:flex items-center gap-1"
+            >
+              <HelpCircle className="h-3.5 w-3.5" />
+              <span>Cheatsheet</span>
+            </button>
+            <a
+              href="https://github.com/Tejas-2408/cron-expression-converter"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200 transition-colors shadow-sm"
+            >
+              <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24">
+                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+              </svg>
+              <span>Contribute</span>
+            </a>
+          </div>
+        </div>
+      </header>
 
-        {/* Main Content Area */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-8">
-          {/* Hero & Dialect Selector */}
-          <section className="space-y-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  Universal Cron Expression Engine
-                </h2>
-                <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-                  Inspect, translate, and bulletproof schedule triggers across AWS CloudWatch, Quartz, Jenkins Hashed syntax, POSIX UNIX, and Kubernetes workloads.
-                </p>
-              </div>
+      {/* Main Focus Area (Cronhub-like clean layout) */}
+      <main className="max-w-3xl w-full mx-auto px-4 py-8 sm:py-12 flex-1 flex flex-col items-center space-y-8">
+        
+        {/* Header & Dialect Selector */}
+        <div className="w-full text-center space-y-3">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            Cron Expression Evaluator
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto">
+            Interactive, human-readable cron schedule generator and dialect converter.
+          </p>
 
-              {/* Dialect Tabs */}
-              <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-slate-900 border border-slate-800 self-start md:self-center">
-                {(Object.keys(DIALECTS) as CronDialect[]).map((dKey) => {
-                  const dObj = DIALECTS[dKey];
-                  const isActive = dialect === dKey;
-                  return (
-                    <button
-                      key={dKey}
-                      onClick={() => handleDialectChange(dKey)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                        isActive
-                          ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                      }`}
-                    >
-                      {dObj.name.split(' / ')[0]}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Dialect Info Banner */}
-            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-3.5 flex items-start gap-3 text-xs text-slate-300">
-              <Layers className="h-4 w-4 text-indigo-400 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-semibold text-slate-200">{DIALECTS[dialect].name}: </span>
-                {DIALECTS[dialect].description}
-              </div>
-            </div>
-          </section>
-
-          {/* Interactive Input Section */}
-          <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 sm:p-6 shadow-xl backdrop-blur space-y-6">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label htmlFor="cron-input" className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-                  <Terminal className="h-4 w-4 text-emerald-400" />
-                  <span>Cron Expression ({dialect.toUpperCase()})</span>
-                </label>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleCopy}
-                    className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-md transition-colors"
-                  >
-                    {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-                    <span>{copied ? 'Copied' : 'Copy'}</span>
-                  </button>
-                  <button
-                    onClick={() => handleDialectChange(dialect)}
-                    className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-md transition-colors"
-                    title="Reset to default for dialect"
-                  >
-                    <RotateCcw className="h-3.5 w-3.5" />
-                    <span>Reset</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Expression Main Input Field */}
-              <div className="relative">
-                <input
-                  id="cron-input"
-                  type="text"
-                  value={expression}
-                  onChange={(e) => setExpression(e.target.value)}
-                  placeholder="e.g. */15 * * * *"
-                  className={`w-full rounded-xl border font-mono text-lg sm:text-2xl px-4 py-3.5 text-slate-100 bg-slate-950/80 transition focus:outline-none focus:ring-2 ${
-                    analysis.isValid
-                      ? 'border-slate-700 focus:border-indigo-500 focus:ring-indigo-500/20'
-                      : 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20'
+          {/* Dialect Tabs */}
+          <div className="inline-flex flex-wrap justify-center gap-1 p-1 rounded-xl bg-slate-900/90 border border-slate-800/80 text-xs mt-2">
+            {(Object.keys(DIALECTS) as CronDialect[]).map((dKey) => {
+              const dObj = DIALECTS[dKey];
+              const isActive = dialect === dKey;
+              return (
+                <button
+                  key={dKey}
+                  onClick={() => handleDialectChange(dKey)}
+                  className={`px-3 py-1 rounded-lg font-medium transition-all ${
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                   }`}
-                />
-              </div>
+                >
+                  {dObj.name.split(' / ')[0]}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-              {/* Realtime Human-Readable Meaning */}
+        {/* Primary Clean Card (Cronhub style) */}
+        <div className="w-full rounded-2xl border border-slate-800 bg-slate-900/50 p-6 sm:p-8 shadow-xl backdrop-blur space-y-6">
+          
+          {/* Real-time Human Translation Title */}
+          <div className="text-center space-y-1">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+              Human-Readable Schedule
+            </span>
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400 min-h-[2.5rem] flex items-center justify-center">
               {analysis.isValid ? (
-                <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-4 flex items-start gap-3">
-                  <Zap className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
-                      Evaluated Schedule Output:
-                    </span>
-                    <p className="text-base sm:text-lg font-medium text-slate-100 mt-0.5">
-                      &ldquo;{analysis.humanDescription}&rdquo;
-                    </p>
-                  </div>
-                </div>
+                <span>&ldquo;{analysis.humanDescription}&rdquo;</span>
               ) : (
-                <div className="rounded-xl border border-rose-500/30 bg-rose-950/20 p-3.5 text-xs text-rose-300">
-                  {analysis.error}
-                </div>
+                <span className="text-rose-400 text-lg font-medium">{analysis.error}</span>
               )}
             </div>
+          </div>
 
-            {/* Quick Presets for current dialect */}
-            <div className="pt-2 border-t border-slate-800/80">
-              <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="text-slate-400 font-medium">Verified {DIALECTS[dialect].name.split(' / ')[0]} Presets:</span>
-                {DIALECTS[dialect].exampleExpressions.map((example) => (
-                  <button
-                    key={example.expr}
-                    onClick={() => handleApplyPreset(example.expr)}
-                    className="rounded-lg bg-slate-800 hover:bg-slate-700 px-2.5 py-1 text-slate-300 font-mono border border-slate-700/60 transition-colors"
-                  >
-                    {example.label} ({example.expr})
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Interactive Asterisk Blueprint */}
-            <ExpressionExplainer
-              fields={analysis.fields}
-              activeFieldIdx={activeFieldIdx}
-              onFieldHover={setActiveFieldIdx}
+          {/* Big Clean Input Area */}
+          <div className="relative max-w-xl mx-auto">
+            <input
+              type="text"
+              value={expression}
+              onChange={(e) => setExpression(e.target.value)}
+              placeholder="* * * * *"
+              className={`w-full text-center font-mono text-2xl sm:text-4xl py-3 px-4 rounded-xl border bg-slate-950/80 tracking-widest text-white transition focus:outline-none focus:ring-2 ${
+                analysis.isValid
+                  ? 'border-slate-700 focus:border-blue-500 focus:ring-blue-500/20'
+                  : 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20'
+              }`}
             />
-          </section>
-
-          {/* Edge Case Warning Panel */}
-          {analysis.warnings.length > 0 && (
-            <section className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 backdrop-blur">
-              <EdgeCaseAlerts warnings={analysis.warnings} />
-            </section>
-          )}
-
-          {/* Bi-Directional Plain English Translation */}
-          <section>
-            <BiDirectionalTranslator
-              currentDialect={dialect}
-              onApplyExpression={handleApplyPreset}
-            />
-          </section>
-
-          {/* Visual Run Timetable (Next 5-10 Runs) */}
-          <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 sm:p-6 backdrop-blur">
-            <VisualTimetable runs={analysis.nextRuns} />
-          </section>
-
-          {/* Dialect Reference Guide & Cheatsheet for SEO */}
-          <section className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-4">
-            <h3 className="text-base font-semibold text-white flex items-center gap-2">
-              <Code2 className="h-5 w-5 text-indigo-400" />
-              <span>Production Schedule Architecture Notes</span>
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
-              <div className="p-3.5 rounded-xl border border-slate-800 bg-slate-950/50 space-y-1.5">
-                <h4 className="font-semibold text-slate-100">AWS EventBridge Rules</h4>
-                <p className="text-slate-400">
-                  Must supply 6 fields: <code>cron(Min Hour DOM Month DOW Year)</code>. Exactly one wildcard between DOM and DOW must be <code>?</code> to resolve ambiguity.
-                </p>
-              </div>
-              <div className="p-3.5 rounded-xl border border-slate-800 bg-slate-950/50 space-y-1.5">
-                <h4 className="font-semibold text-slate-100">Jenkins Hashed Triggers</h4>
-                <p className="text-slate-400">
-                  Using <code>H/15 * * * *</code> guarantees executions every 15 minutes while offsetting the start minute according to the job name hash, avoiding peak server saturation.
-                </p>
-              </div>
-              <div className="p-3.5 rounded-xl border border-slate-800 bg-slate-950/50 space-y-1.5">
-                <h4 className="font-semibold text-slate-100">Quartz Scheduler</h4>
-                <p className="text-slate-400">
-                  Supports seconds at position 1 and advanced calendar tags like <code>L</code> (Last day) and <code>W</code> (Nearest weekday).
-                </p>
-              </div>
-            </div>
-          </section>
-        </main>
-
-        {/* Footer */}
-        <footer className="mt-16 border-t border-slate-800/80 bg-slate-950/90 py-8 text-xs text-slate-500">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-              <p className="font-medium text-slate-400">CronDialect - Production-Grade Schedule Trigger Utility</p>
-              <p className="mt-0.5">Designed with strict security headers, zero-tracking ethical monetization, and instant client-side execution.</p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span>Next.js 14 / TypeScript</span>
-              <span>&bull;</span>
-              <span>Tailwind CSS</span>
-              <span>&bull;</span>
-              <span>Vercel Deployable</span>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+              <button
+                onClick={handleCopy}
+                title="Copy expression"
+                className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+              >
+                {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+              </button>
+              <button
+                onClick={() => handleDialectChange(dialect)}
+                title="Reset"
+                className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </button>
             </div>
           </div>
-        </footer>
-      </div>
+
+          {/* Asterisk Field Positions Breakdown */}
+          <ExpressionExplainer
+            fields={analysis.fields}
+            activeFieldIdx={activeFieldIdx}
+            onFieldHover={setActiveFieldIdx}
+          />
+
+          {/* Clean Quick Presets */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-slate-800/60 text-xs">
+            <span className="text-slate-500 text-[11px] mr-1">Presets:</span>
+            {DIALECTS[dialect].exampleExpressions.map((example) => (
+              <button
+                key={example.expr}
+                onClick={() => handleApplyPreset(example.expr)}
+                className="rounded-lg bg-slate-950 hover:bg-slate-800 px-2.5 py-1 text-slate-300 font-mono border border-slate-800 text-[11px] transition"
+              >
+                {example.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Edge-Case Warning Notice (if applicable) */}
+        {analysis.warnings.length > 0 && (
+          <div className="w-full">
+            <EdgeCaseAlerts warnings={analysis.warnings} />
+          </div>
+        )}
+
+        {/* Next Execution Visual Timetable */}
+        <div className="w-full rounded-2xl border border-slate-800 bg-slate-900/30 p-5 backdrop-blur">
+          <VisualTimetable runs={analysis.nextRuns} />
+        </div>
+
+        {/* Plain English to Cron Translator */}
+        <div className="w-full rounded-2xl border border-slate-800 bg-slate-900/30 p-5 backdrop-blur">
+          <BiDirectionalTranslator
+            currentDialect={dialect}
+            onApplyExpression={handleApplyPreset}
+          />
+        </div>
+
+        {/* SEO Cheatsheet Section (Expandable or accessible for crawlers) */}
+        <section aria-labelledby="seo-reference" className="w-full space-y-4 pt-4 border-t border-slate-900">
+          <div className="flex items-center justify-between">
+            <h2 id="seo-reference" className="text-sm font-semibold uppercase tracking-wider text-slate-400">
+              Cron Job Syntax & Dialects Reference
+            </h2>
+            <button
+              onClick={() => setShowCheatsheet(!showCheatsheet)}
+              className="text-xs text-blue-400 hover:underline"
+            >
+              {showCheatsheet ? 'Collapse' : 'Expand Cheatsheet'}
+            </button>
+          </div>
+
+          {showCheatsheet && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs text-slate-400 pt-2">
+              <div className="p-3 rounded-xl border border-slate-800/80 bg-slate-900/30 space-y-1">
+                <span className="font-semibold text-slate-200">Standard UNIX Crontab</span>
+                <p>5 fields: Minute, Hour, Day of Month, Month, Day of Week. Supports ranges (1-5) and steps (*/15).</p>
+              </div>
+              <div className="p-3 rounded-xl border border-slate-800/80 bg-slate-900/30 space-y-1">
+                <span className="font-semibold text-slate-200">AWS CloudWatch / EventBridge</span>
+                <p>6 fields: requires wildcard ? in either Day-of-month or Day-of-week to avoid ambiguity.</p>
+              </div>
+              <div className="p-3 rounded-xl border border-slate-800/80 bg-slate-900/30 space-y-1">
+                <span className="font-semibold text-slate-200">Jenkins Hashed Cron</span>
+                <p>Uses H/15 token to distribute execution starts deterministically across executor nodes.</p>
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* Single Developer Ad Banner (Shifted to Bottom) */}
+        <div className="w-full pt-4">
+          <DeveloperAdSlot network="ethicalads" />
+        </div>
+      </main>
+
+      {/* Clean Footer */}
+      <footer className="border-t border-slate-900 bg-slate-950 py-6 text-xs text-slate-500 text-center">
+        <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p>CronView &bull; Open-source cron evaluator & expression generator.</p>
+          <div className="flex items-center space-x-4">
+            <a
+              href="https://github.com/Tejas-2408/cron-expression-converter"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-slate-300 transition"
+            >
+              GitHub Repository
+            </a>
+            <span>&bull;</span>
+            <a href="https://cronview-six.vercel.app/sitemap.xml" className="hover:text-slate-300 transition">
+              Sitemap
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
