@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { SPONSOR_CONFIG } from '../lib/sponsorConfig';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -94,6 +95,8 @@ export default function RootLayout({
     ],
   };
 
+  const isAdsense = SPONSOR_CONFIG.activeProvider === 'adsense';
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -101,7 +104,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Anti-flicker theme initialization script */}
+        {/* Anti-flicker theme initialization */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -116,8 +119,20 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* EthicalAds script CDN placeholder - Safe & privacy-friendly */}
-        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+
+        {/* Google AdSense Script (Enabled when activeProvider === 'adsense') */}
+        {isAdsense && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${SPONSOR_CONFIG.adsense.client}`}
+            crossOrigin="anonymous"
+          />
+        )}
+
+        {/* EthicalAds Script (Optional fallback) */}
+        {!isAdsense && (
+          <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        )}
       </head>
       <body className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased selection:bg-blue-600 selection:text-white transition-colors duration-150">
         {children}

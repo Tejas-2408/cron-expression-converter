@@ -1,92 +1,76 @@
-# Developer Ad Network Integration & Placement Guide
+# Complete Monetization & Google AdSense Setup Guide
 
-This guide details how to implement, configure, and monetize the non-intrusive single ad unit in **CronDialect** without degrading UX or falling victim to developer ad-block rates.
-
----
-
-## 1. Why Developer Ad Networks instead of Google AdSense?
-
-| Metric | Google AdSense | EthicalAds / Carbon Ads |
-|---|---|---|
-| **Ad-Block Rate for Devs** | **60% - 85% blocked** (uBlock, Brave, Pi-hole) | **Bypasses most blockers** (allowlisted non-tracking networks) |
-| **Average Developer CPM** | $0.50 – $2.00 RPM | **$2.00 – $7.00+ CPM** |
-| **UX & Script Weight** | Heavy cookies, third-party trackers, layout shifts | Single lightweight asset (<15KB), zero cookie tracking |
-| **Audience Alignment** | General consumer ads (insurance, ecommerce) | Hosting, cloud databases, dev tools, CI/CD tools |
+This guide explains how to integrate **Google AdSense** on **CronView**, as well as how to switch between AdSense and high-earning developer partner cards.
 
 ---
 
-## 2. Option A: EthicalAds (Recommended for Immediate Launch)
+## 1. How Google AdSense Works on CronView
 
-[EthicalAds](https://www.ethicalads.io/) is designed explicitly for technical blogs and developer utility tools.
+CronView is a **100% free developer utility** with no signups, paywalls, or gated services. This makes it an ideal candidate for Google AdSense programmatic display advertising.
 
-### Step 1: Sign up as a Publisher
-1. Visit [ethicalads.io/publishers](https://www.ethicalads.io/publishers/) and sign up with your deployed Vercel domain (`https://your-cron-app.vercel.app`).
-2. EthicalAds typically approves developer utilities within 24–48 hours without strict traffic minimums.
-3. You will receive your custom publisher ID (e.g. `your-publisher-name`).
-
-### Step 2: Configure in CronDialect
-Open `src/components/DeveloperAdSlot.tsx` and update line 71:
-```tsx
-// Replace 'cronconverter-dev' with your approved Publisher ID:
-<div
-  className="horizontal adaptive"
-  data-ea-publisher="your-publisher-name"
-  data-ea-type="image"
-/>
-```
-
-The script is already included in `src/app/layout.tsx`:
-```html
-<script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
-```
+We have pre-configured:
+1. **Hardened CSP (Content Security Policy)** in `next.config.js` to whitelist `pagead2.googlesyndication.com` and Google ad iframes.
+2. **Single Bottom Ad Placement**: Exactly 1 responsive display unit positioned below the timetable and converter so it never harms UX or Core Web Vitals.
+3. **One-Line Toggle**: Switch from Developer Affiliate cards to Google AdSense in seconds.
 
 ---
 
-## 3. Option B: Carbon Ads (BuySellAds)
+## 2. Step-by-Step Google AdSense Approval & Setup
 
-[Carbon Ads](https://www.carbonads.net/) is the gold-standard sponsor unit used by Bootstrap, Font Awesome, and Laravel.
+### Step 1: Submit CronView to AdSense
+1. Go to **[adsense.google.com](https://adsense.google.com/)** and sign in with your Google account.
+2. Click **Sites** &rarr; **Add Site**.
+3. Enter your live domain (e.g. `https://cronview-six.vercel.app` or your custom domain).
+4. Google will give you your **Publisher ID** (looks like `ca-pub-1234567890123456`).
 
-### Step 1: Traffic Requirement
-Carbon Ads requires moderate baseline traffic (~20,000 to 50,000 monthly pageviews).
-*Strategy: Start with EthicalAds or custom sponsor affiliate cards until pageviews hit the threshold, then apply to Carbon Ads.*
+### Step 2: Create a Display Ad Unit
+1. Inside Google AdSense dashboard, click **Ads** &rarr; **By ad unit** &rarr; **Display ads**.
+2. Name it `CronView Bottom Banner`.
+3. Select **Responsive** ad size.
+4. Click **Create**. Google will show you an HTML snippet with two values:
+   - `data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"`
+   - `data-ad-slot="XXXXXXXXXX"`
 
-### Step 2: Carbon Tag Setup
-When approved, Carbon provides an embed snippet like:
-```html
-<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=YOUR_CODE&placement=YOUR_DOMAIN" id="_carbonads_js"></script>
+### Step 3: Activate AdSense in CronView
+Open `src/lib/sponsorConfig.ts`:
+```ts
+export const SPONSOR_CONFIG = {
+  // 1. Change activeProvider to 'adsense'
+  activeProvider: 'adsense',
+
+  // 2. Paste your Google AdSense Client & Slot ID
+  adsense: {
+    client: 'ca-pub-XXXXXXXXXXXXXXXX', // Your Publisher ID
+    slot: 'XXXXXXXXXX',               // Your Ad Slot ID
+  },
+  ...
+};
 ```
 
-In `src/components/DeveloperAdSlot.tsx`, replace the inner placeholder or load it dynamically:
-```tsx
-useEffect(() => {
-  if (network === 'carbon') {
-    const script = document.createElement('script');
-    script.src = '//cdn.carbonads.com/carbon.js?serve=YOUR_SERVE_CODE&placement=yourdomain';
-    script.id = '_carbonads_js';
-    script.async = true;
-    const container = document.getElementById('carbon-container');
-    container?.appendChild(script);
-  }
-}, [network]);
-```
+That's it! As soon as you commit and push to Vercel, the Google AdSense script will load automatically and display responsive programmatic ads to every visitor.
 
 ---
 
-## 4. Option C: Direct Developer Affiliates (Self-Hosted Fallback)
+## 3. Important: AdSense Approval Tips for Free Tool Sites
 
-If waiting for network approval, you can earn immediate revenue with high-paying developer affiliate programs (e.g., DigitalOcean, Supabase, Railway, Vercel, Datadog):
-1. In `src/components/DeveloperAdSlot.tsx`, update the fallback card link:
-   ```tsx
-   <a href="https://your-affiliate-link.com" ...>
-   ```
-2. When ad blockers block network scripts, the smart fallback component in `DeveloperAdSlot.tsx` gracefully renders a clean sponsor tile with zero layout shifts.
+Google AdSense uses automated crawlers to evaluate websites. Here is what we have already built to ensure fast approval:
+
+| Requirement | How CronView Complies |
+|---|---|
+| **High Quality Useful Content** | Full interactive cron syntax cheatsheet, visual timetable, and dialect converters. |
+| **Clear Site Purpose** | Title, metadata, and JSON-LD Schema.org markup explicitly declare it as a `DeveloperApplication`. |
+| **Compliance & Navigation** | Working GitHub open-source repository link, clean light/dark mode UI, and `sitemap.xml`. |
+| **No Intrusive Ads** | Exactly 1 responsive unit anchored cleanly at the bottom. |
+
+*Pro-Tip for AdSense Approval:* If AdSense asks for a custom domain (e.g. `cronview.dev` or `cronview.io`), you can connect any inexpensive domain in your Vercel project settings under **Settings &rarr; Domains** for free.
 
 ---
 
-## 5. Security & CSP Configuration
+## 4. Switching Providers Anytime
 
-The project includes strict Content Security Policy (CSP) headers in `next.config.js`:
-```js
-contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://media.ethicalads.io https://cdn.carbonads.com; style-src 'self' 'unsafe-inline' https://media.ethicalads.io; connect-src 'self' https://server.ethicalads.io https://cdn.carbonads.com;"
-```
-If you switch to another network, ensure you add their domain to `script-src` and `connect-src` in `next.config.js`.
+In `src/lib/sponsorConfig.ts`, you can switch your active revenue stream anytime by changing `activeProvider`:
+
+- `'adsense'`: Shows Google AdSense programmatic banner.
+- `'betterstack'`: Shows the native Better Stack heartbeat monitoring sponsor card (earns 25% recurring commission).
+- `'digitalocean'`: Shows the $200 free cloud credits developer banner.
+- `'ethicalads'`: Shows EthicalAds once you hit ~5,000 monthly views.

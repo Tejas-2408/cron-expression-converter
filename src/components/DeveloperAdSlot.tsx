@@ -1,13 +1,49 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { ExternalLink, Activity, Cloud, ShieldCheck } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { ExternalLink, Activity, Cloud } from 'lucide-react';
 import { SPONSOR_CONFIG } from '../lib/sponsorConfig';
 
 export const DeveloperAdSlot: React.FC = () => {
-  const [provider, setProvider] = useState(SPONSOR_CONFIG.activeProvider);
+  const provider = SPONSOR_CONFIG.activeProvider;
 
-  // Fallback to Better Stack sponsor card if ad networks aren't approved yet
+  useEffect(() => {
+    if (provider === 'adsense') {
+      try {
+        if (typeof window !== 'undefined') {
+          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+        }
+      } catch (err) {
+        console.error('AdSense push error:', err);
+      }
+    }
+  }, [provider]);
+
+  // 1. Google AdSense Unit
+  if (provider === 'adsense') {
+    return (
+      <aside
+        aria-label="Advertisement"
+        className="w-full max-w-2xl mx-auto my-6 px-4 text-center"
+      >
+        <div className="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">
+          Sponsored
+        </div>
+        <div className="min-h-[100px] w-full flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-2 overflow-hidden shadow-xs">
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block', width: '100%', minHeight: '90px' }}
+            data-ad-client={SPONSOR_CONFIG.adsense.client}
+            data-ad-slot={SPONSOR_CONFIG.adsense.slot}
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+        </div>
+      </aside>
+    );
+  }
+
+  // 2. Better Stack Heartbeat Sponsor Card
   if (provider === 'betterstack') {
     return (
       <aside
@@ -56,6 +92,7 @@ export const DeveloperAdSlot: React.FC = () => {
     );
   }
 
+  // 3. DigitalOcean Cloud Credits Sponsor Card
   if (provider === 'digitalocean') {
     return (
       <aside
@@ -104,7 +141,7 @@ export const DeveloperAdSlot: React.FC = () => {
     );
   }
 
-  // EthicalAds fallback slot for when approved
+  // 4. EthicalAds Slot
   return (
     <aside aria-label="Sponsored Developer Content" className="w-full max-w-2xl mx-auto my-6 px-4">
       <div

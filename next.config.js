@@ -29,8 +29,8 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            // Allows self, ethicalads and carbon ads CDN scripts and styles
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://media.ethicalads.io https://cdn.carbonads.com; style-src 'self' 'unsafe-inline' https://media.ethicalads.io; img-src 'self' data: https:; connect-src 'self' https://server.ethicalads.io https://cdn.carbonads.com; font-src 'self' data:;",
+            // Hardened CSP: allows self, Google AdSense, Google Syndication, EthicalAds, and Carbon Ads
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://pagead2.googlesyndication.com https://adservice.google.com https://www.googletagservices.com https://media.ethicalads.io https://cdn.carbonads.com; style-src 'self' 'unsafe-inline' https://media.ethicalads.io; img-src 'self' data: https:; connect-src 'self' https://pagead2.googlesyndication.com https://server.ethicalads.io https://cdn.carbonads.com; font-src 'self' data:; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com;",
           },
         ],
       },
