@@ -333,7 +333,7 @@ export default function HomePage() {
 
         {/* Developer Sponsor Ad Unit (Cleanly at Bottom) */}
         <div className="w-full pt-4">
-          <DeveloperAdSlot network="ethicalads" />
+          <DeveloperAdSlot />
         </div>
       </main>
 
