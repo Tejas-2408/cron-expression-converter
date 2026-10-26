@@ -9,12 +9,12 @@
  */
 export const SPONSOR_CONFIG = {
   // Set active provider: 'adsense' | 'betterstack' | 'digitalocean' | 'ethicalads'
-  activeProvider: 'betterstack' as 'adsense' | 'betterstack' | 'digitalocean' | 'ethicalads',
+  activeProvider: 'adsense',
 
   // Google AdSense Configuration
   adsense: {
-    client: 'ca-pub-XXXXXXXXXXXXXXXX', // Replace with your Google AdSense Publisher ID
-    slot: 'XXXXXXXXXX',               // Replace with your Display Ad Unit ID
+    client: 'ca-pub-8215596872497923', // Replace with your Google AdSense Publisher ID
+    slot: '4959366879',               // Replace with your Display Ad Unit ID
   },
 
   // Developer Affiliate Links
