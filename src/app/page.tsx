@@ -167,26 +167,27 @@ export default function HomePage() {
               Build, convert, and inspect cron job expressions across Quartz (Default), UNIX, AWS, Jenkins, and Kubernetes.
             </p>
 
-            {/* Dialect Switcher Tabs with Quartz highlighted */}
-            <div className="inline-flex flex-wrap justify-center gap-1.5 p-1 rounded-xl bg-slate-200/80 dark:bg-slate-900/90 border border-slate-300/80 dark:border-slate-800 text-xs mt-2 shadow-xs">
-              {(Object.keys(DIALECTS) as CronDialect[]).map((dKey) => {
-                const dObj = DIALECTS[dKey];
-                const isActive = dialect === dKey;
-                return (
-                  <button
-                    key={dKey}
-                    onClick={() => handleDialectChange(dKey)}
-                    className={`px-3.5 py-1.5 rounded-lg font-bold transition-all ${
-                      isActive
-                        ? 'bg-blue-600 text-white shadow-xs'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
-                    }`}
-                  >
-                    {dObj.name.split(' / ')[0]}
-                    {dKey === 'quartz' && <span className="ml-1 text-[9px] font-normal uppercase opacity-80">(Default)</span>}
-                  </button>
-                );
-              })}
+            {/* Dialect Switcher Tabs strictly in a single horizontal line */}
+            <div className="w-full overflow-x-auto pb-1 scrollbar-none">
+              <div className="inline-flex items-center justify-center gap-1 p-1 rounded-xl bg-slate-200/80 dark:bg-slate-900/90 border border-slate-300/80 dark:border-slate-800 text-xs shadow-xs whitespace-nowrap">
+                {(Object.keys(DIALECTS) as CronDialect[]).map((dKey) => {
+                  const dObj = DIALECTS[dKey];
+                  const isActive = dialect === dKey;
+                  return (
+                    <button
+                      key={dKey}
+                      onClick={() => handleDialectChange(dKey)}
+                      className={`px-3 sm:px-3.5 py-1.5 rounded-lg font-bold transition-all shrink-0 ${
+                        isActive
+                          ? 'bg-blue-600 text-white shadow-xs'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      {dObj.name.split(' / ')[0]}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
