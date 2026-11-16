@@ -74,24 +74,35 @@ export default function RootLayout({
 }) {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: 'CronView - Cron Expression Evaluator',
-    url: 'https://cronview-six.vercel.app',
-    applicationCategory: 'DeveloperApplication',
-    operatingSystem: 'All',
-    description: 'Universal online cron expression parser, evaluator, and schedule timeline generator supporting UNIX, Quartz, AWS EventBridge, Jenkins, and Kubernetes.',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-    featureList: [
-      'Interactive Cron Expression Visualizer',
-      'Instant Human-Readable Plain English Translation',
-      'Quartz, AWS CloudWatch, Jenkins Hash, and Kubernetes Dialect Support',
-      'Next Trigger Schedule & Timezone Offset Projections',
-      'Edge Case Alerts for DST and Day-of-Week vs Day-of-Month traps',
-      'Bi-directional Natural Language to Cron Generation',
+    '@graph': [
+      {
+        '@type': 'WebApplication',
+        name: 'CronView - Cron Expression Evaluator',
+        url: 'https://cronview-six.vercel.app',
+        applicationCategory: 'DeveloperApplication',
+        operatingSystem: 'All',
+        description: 'Universal online cron expression parser, evaluator, and schedule timeline generator supporting UNIX, Quartz, AWS EventBridge, Jenkins, and Kubernetes.',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+        featureList: [
+          'Interactive Cron Expression Visualizer',
+          'Instant Human-Readable Plain English Translation',
+          'Quartz, AWS CloudWatch, Jenkins Hash, and Kubernetes Dialect Support',
+          'Next Trigger Schedule & Timezone Offset Projections',
+          'Edge Case Alerts for DST and Day-of-Week vs Day-of-Month traps',
+          'Bi-directional Natural Language to Cron Generation',
+        ],
+      },
+      {
+        '@type': 'Organization',
+        name: 'CronView',
+        url: 'https://cronview-six.vercel.app',
+        logo: 'https://cronview-six.vercel.app/icon.svg',
+        sameAs: ['https://github.com/Tejas-2408/cron-expression-converter'],
+      },
     ],
   };
 

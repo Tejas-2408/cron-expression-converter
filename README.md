@@ -36,6 +36,8 @@ A high-performance, edge-safe web utility built with **Next.js (App Router)**, *
 │  └───────────────────────┘ │ • Next 5 Runs     │ └───────────────────┘ │
 │                            │ • Plain Eng &rarr; Cron│                   │
 │                            │ • Google AdSense  │                       │
+│                            │ • Publisher Docs  │                       │
+│                            │ • Developer FAQ   │                       │
 │                            └───────────────────┘                       │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
@@ -61,13 +63,16 @@ A high-performance, edge-safe web utility built with **Next.js (App Router)**, *
                                     │
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                   Monetization (Google AdSense)                        │
-│                     (src/lib/sponsorConfig.ts)                         │
+│              Publisher Content & Knowledge Hub (AdSense Safe)          │
 │                                                                        │
-│   - Centralized configuration in sponsorConfig.ts                      │
-│   - Automatically loads Google AdSense script in layout.tsx            │
-│   - Renders responsive <ins class="adsbygoogle" /> at bottom of canvas │
-│   - Security headers in next.config.js allow AdSense & DoubleClick     │
+│   - /guides/cron-syntax-guide: Comprehensive 5-part POSIX guide        │
+│   - /guides/quartz-cron-tutorial: Spring Boot & Quartz 6-7 part rules  │
+│   - /guides/aws-eventbridge-cron-guide: AWS 6-field & '?' rules        │
+│   - /guides/common-cron-mistakes: 5 Critical production cron traps     │
+│   - /about: Publisher mission & engineering background                 │
+│   - /privacy-policy: Google AdSense & DoubleClick cookie compliance    │
+│   - /terms: Terms of Service and disclaimer of warranties              │
+│   - /contact: Support channels, GitHub issues, and feedback form       │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -97,52 +102,25 @@ A high-performance, edge-safe web utility built with **Next.js (App Router)**, *
 
 ---
 
-## 💰 Google AdSense Integration & How It Works
+## 💰 Google AdSense Integration & Policy Compliance
 
-CronView is designed as a **100% free tool with no paywalls or signups**, making it eligible for Google AdSense programmatic display advertising.
+CronView complies with Google Publisher Policies and Google AdSense Guidelines for utility and web applications.
 
-### Configuration (`src/lib/sponsorConfig.ts`):
-```ts
-export const SPONSOR_CONFIG = {
-  // Set activeProvider to 'adsense'
-  activeProvider: 'adsense',
-
-  // Your Google AdSense credentials:
-  adsense: {
-    client: 'ca-pub-XXXXXXXXXXXXXXXX', // Your Publisher ID
-    slot: 'XXXXXXXXXX',               // Your Responsive Display Unit ID
-  },
-};
-```
-
-### How the Ad System Operates:
-1. When `activeProvider === 'adsense'`, Next.js automatically injects the Google AdSense script into `<head>`:
-   ```html
-   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-..." crossorigin="anonymous"></script>
-   ```
-2. The ad is rendered by `DeveloperAdSlot.tsx` at the bottom of the central canvas:
-   ```html
-   <ins class="adsbygoogle"
-        style="display:block; width:100%; min-height:90px;"
-        data-ad-client="ca-pub-..."
-        data-ad-slot="..."
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
-   ```
-3. Hardened Content Security Policy (CSP) in `next.config.js` whitelists:
-   - `https://pagead2.googlesyndication.com`
-   - `https://googleads.g.doubleclick.net`
-   - `https://tpc.googlesyndication.com`
+### Resolving "Screens Without Publisher Content":
+- **Mandatory Policy Disclosures**: Dedicated [`/privacy-policy`](https://cronview-six.vercel.app/privacy-policy) disclosing Google AdSense advertising cookies and opt-out instructions.
+- **Editorial Hub**: 4 in-depth technical guides with over 4,000 words of original educational content.
+- **Publisher Entity**: Fully documented [`/about`](https://cronview-six.vercel.app/about) and [`/contact`](https://cronview-six.vercel.app/contact) pages.
+- **Detailed Step-by-Step Setup**: See [`ADS_SETUP.md`](./ADS_SETUP.md) for complete instructions.
 
 ---
 
 ## 🔍 Search Engine Optimization (SEO)
 
 CronView is tailored for high-ranking visibility across developer search keywords (`cron`, `cron job evaluator`, `crontab guru alternative`, `quartz cron converter`):
-- **JSON-LD Schema.org Data**: Declares CronView as a free `DeveloperApplication` in `layout.tsx`.
-- **Dynamic Sitemap**: Auto-generated at `/sitemap.xml`.
+- **JSON-LD Schema.org Data**: Declares CronView as a `WebApplication` and `Organization` in `layout.tsx`.
+- **Dynamic Sitemap**: Auto-generated at `/sitemap.xml` covering all 17 static routes.
 - **Robots.txt**: Permits search indexation from Googlebot and Bingbot at `/robots.txt`.
-- **Semantic Cheatsheet**: Searchable, crawlable reference table comparing all dialect rules.
+- **Semantic Cheatsheet & Developer FAQ**: Crawlable reference documentation directly on `/`.
 
 ---
 
