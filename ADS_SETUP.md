@@ -28,10 +28,25 @@ We have transformed CronView from a single-page script into a comprehensive **17
 | **Technical Documentation** | POSIX guide, Quartz 6-7 part tutorial, AWS EventBridge guide, 5 Common Mistakes. | `/guides/*` |
 | **Homepage Editorial Content** | Added "How Cron Scheduling Works" overview and 3-part Developer FAQ. | [`/`](https://cronview-six.vercel.app/) |
 | **Dynamic Sitemap & Schema** | Updated `sitemap.xml` with all 17 static routes and `Organization` JSON-LD. | [`/sitemap.xml`](https://cronview-six.vercel.app/sitemap.xml) |
+| **Authorized Digital Sellers (ads.txt)** | Created `ads.txt` with publisher ID `pub-8215596872497923`. | [`/ads.txt`](https://cronview-six.vercel.app/ads.txt) |
 
 ---
 
-## 2. Step-by-Step: Requesting Review in Google AdSense
+## 2. Google AdSense `ads.txt` Verification
+
+Google AdSense strictly requires an `ads.txt` file at the root of your domain to prevent counterfeit ad inventory.
+
+### Formatted Entry in CronView:
+```text
+google.com, pub-8215596872497923, DIRECT, f08c47fec0942fa0
+```
+
+- **File locations**: Both `public/ads.txt` and `src/app/ads.txt/route.ts` are created to guarantee zero 404s on Vercel.
+- **Verification URL**: `https://cronview-six.vercel.app/ads.txt`
+
+---
+
+## 3. Step-by-Step: Requesting Review in Google AdSense
 
 Now that the site has substantial publisher content, clear navigation, and all mandatory policy pages, follow these steps to request re-review:
 
